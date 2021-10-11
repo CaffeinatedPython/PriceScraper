@@ -5,14 +5,15 @@ from bs4 import BeautifulSoup
 import requests
 
 
-import unicodedata
-
 def get_data(url):
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
     return soup
 
 def parse_ebay(soup):
+    """
+    Returns the 3 lowest priced auctions sorted as a list of dict
+    """
     results = soup.find_all('div', {'class': 's-item__wrapper clearfix'})
     product_list = []
     now = datetime.now().strftime("%Y%m%d")
@@ -45,55 +46,42 @@ def parse_ebay(soup):
             'date' : now
         }
         product_list.append(products)
-    return(product_list)
+
+    #Sort for 3 lowest prices
+    sorted_product_list = sorted(product_list, key = lambda i: (i['price']))[:3]
+
+    return(sorted_product_list)
 
 
-def parse_mtggoldfish(soup):
-    #results = soup.find('div', {'class', 'price-card-purchase price-card-purchase-mobile'})
+def parse_mtggoldfish(soup, name):
+
     results = soup.find_all('a')
 
     '''
     There is a second tag at the bottom of the page that causes this to run twice.
-
     '''
     product_list = []
     now = datetime.now().strftime("%Y%m%d")
     for each in results:
-        #wanted something more elegant than 2 if statements but nothing
-        #I tried was getting rid of the dupes
+
         if 'Market Price' in each.text:
-            #strip output for price
-            print(each.text)
+            tcg_price = float(each.text.strip().replace('\n', '').split('$', 1)[1].strip())
 
         elif 'eBay - ' in each.text:
             if 'eBay' in each.text:
-                #strip output for price
-                print(each.text)
-                #isolating for testing
-                ebay_tester = each.text
+                ebay_price = float(each.text.strip().replace('\n', '').split('$', 1)[1].strip())
 
-
-
-
-    #will... not... get... rid... of... dead.... space...WTF
-    print(ebay_tester.rstrip().lstrip().strip())
-
-    #this is for formatting in a future step
-    title = ''
-    price = ''
-    pic = ''
-    link = ''
 
     #future formating
     products = {
-        'title': title,
-        'price': price,
-        'pic': pic,
-        'link': link,
+        'title': name,
+        'price': sorted([ebay_price,tcg_price])[0],
+        'pic': '',
+        'link': '',
         'date' : now
     }
-    product_list.append(products)
-    return(product_list)
+
+    return(products)
 
 def output(product_list):
     product_df = pd.DataFrame(product_list)
@@ -103,17 +91,22 @@ def main():
 
     url = "https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2334524.m570.l1313&_nkw=modern+horizons+2+set+booster+box&_sacat=0&LH_TitleDesc=0&_udlo=100&rt=nc&Language=English&_odkw=modern+horizons+2+booster+box&_osacat=0&LH_BIN=1&_dcat=261044&_sop=15"
     name = "Modern Horizons 2"
-    soup = get_data(url)
-    product_list = parse_ebay(soup)
+    #soup = get_data(url)
+    #product_list = parse_ebay(soup)
+    #print(to_json(product_list, name))
+
+    url = "https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2334524.m570.l1313&_nkw=tales+of+aria+first+edition+booster+box+-%28bundle%2C+repack*%2C+break%2C+case%2C+opened%2C+pack*%2C+empty%2C+lot%2C+raffle%2C+theme%2C+Chinese%2C+French%2C+German%2C+Italian%2C+Korean%2C+Japanese%2C+Portuguese%2C+Russian%2C+Spanish%2C+deutsch%29&_sacat=0&LH_TitleDesc=0&_odkw=tales+of+aria+first+edition+booster+box&_osacat=0&LH_BIN=1&_sop=15"
+    name = "Tales of Aria - Booster Box First Edition"
+    #$soup = get_data(url)
+    #product_list = parse_ebay(soup)
     #print(to_json(product_list, name))
 
 
     url = 'https://www.mtggoldfish.com/price/Adventures+in+the+Forgotten+Realms/Adventures+in+the+Forgotten+Realms+Draft+Booster+Box-sealed#paper'
     name = "Adventures in the Forgotten Realms Draft Booster Box"
     goldfish_soup = get_data(url)
-    #print(goldfish_soup)
-    product_list = parse_mtggoldfish(goldfish_soup)
-    #print(product_list)
+    product_list = parse_mtggoldfish(goldfish_soup, name)
+    print(to_json(product_list, name))
 
 
 
