@@ -1,0 +1,22 @@
+{
+    "fab": [
+        {
+            "name":"Tales of Aria First Edition Booster Box",
+            "ebay":"https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2334524.m570.l1313&_nkw=tales+of+aria+first+edition+booster+box+-%28bundle%2C+repack*%2C+break%2C+case%2C+opened%2C+pack*%2C+empty%2C+lot%2C+raffle%2C+theme%2C+Chinese%2C+French%2C+German%2C+Italian%2C+Korean%2C+Japanese%2C+Portuguese%2C+Russian%2C+Spanish%2C+deutsch%29&_sacat=0&LH_TitleDesc=0&_odkw=tales+of+aria+first+edition+booster+box&_osacat=0&LH_BIN=1&_sop=15"
+        }
+   ],
+    "mtg": [
+        {
+            "name": "Innistrad: Midnight Hunt Set Booster Box",
+            "mtggoldfish": "https://www.mtggoldfish.com/price/Innistrad+Midnight+Hunt/Innistrad+Midnight+Hunt+Set+Booster+Box-sealed#paper"
+        },
+        {
+            "name":"Adventures in the Forgotten Realms Draft Booster Box",
+            "mtggoldfish":"https://www.mtggoldfish.com/price/Adventures+in+the+Forgotten+Realms/Adventures+in+the+Forgotten+Realms+Draft+Booster+Box-sealed#paper"
+        },
+        {
+            "name":"Commander Legends Draft Booster Box",
+            "mtggoldfish":"https://www.mtggoldfish.com/price/Commander+Legends/Commander+Legends+Draft+Booster+Box-sealed#paper"
+        }
+    ]
+}
